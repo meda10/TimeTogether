@@ -1,32 +1,74 @@
+'use strict'
+
+const anniversary = new Date('Aug 17, 2017 15:00:00');
+let next_anniversary = new Date('Aug 17, 2021 15:00:00');
+const secondsInADay = 60 * 60 * 1000 * 24;
+const secondsInAHour = 60 * 60 * 1000;
+const secondsInAMins = 60 * 1000;
+const count_up_id = 'countup1';
+const count_down_id = 'anniversary';
+const count_up_id_times = 'time_only';
+
 window.onload = function() {
-  // Month Day, Year Hour:Minute:Second, id-of-element-container
-  countUpFromTime("Aug 17, 2017 15:00:00", 'countup1'); // ****** Change this line!
+  countUpFromTime(anniversary);
+  countDownToTime(next_anniversary);
 };
 
-function countUpFromTime(countFrom, id) {
-  countFrom = new Date(countFrom).getTime();
-  let now = new Date();
-  countFrom = new Date(countFrom);
-  let timeDifference = (now - countFrom);
-  let secondsInADay = 60 * 60 * 1000 * 24;
-  let secondsInAHour = 60 * 60 * 1000;
-
+function get_time(timeDifference) {
   let days = Math.floor(timeDifference / (secondsInADay));
   let years = Math.floor(days / 365);
   if (years > 1){
-    days = days - (years * 365)
+    days = days - (years * 365);
   }
   let hours = Math.floor((timeDifference % (secondsInADay)) / (secondsInAHour));
-  let mins = Math.floor(((timeDifference % (secondsInADay)) % (secondsInAHour)) / (60 * 1000));
-  let secs = Math.floor((((timeDifference % (secondsInADay)) % (secondsInAHour)) % (60 * 1000)) / 1000);
+  let minutes = Math.floor(((timeDifference % (secondsInADay)) % (secondsInAHour)) / secondsInAMins);
+  let seconds = Math.floor((((timeDifference % (secondsInADay)) % (secondsInAHour)) % secondsInAMins) / 1000);
+  return {years, days, hours, minutes, seconds};
+}
 
-  let idEl = document.getElementById(id);
+function countUpFromTime(countFrom) {
+  let now = new Date();
+  let timeDifference = (now - countFrom);
+  let { years, days, hours, minutes, seconds } = get_time(timeDifference);
+
+  let id_times = document.getElementById(count_up_id_times);
+  id_times.getElementsByClassName('days_only')[0].innerHTML = String(Math.floor(timeDifference / secondsInADay));
+  id_times.getElementsByClassName('hours_only')[0].innerHTML = String(Math.floor(timeDifference / secondsInAHour));
+  id_times.getElementsByClassName('minutes_only')[0].innerHTML = String(Math.floor(timeDifference / secondsInAMins));
+  id_times.getElementsByClassName('seconds_only')[0].innerHTML = String(Math.floor(timeDifference / 1000));
+
+  let idEl = document.getElementById(count_up_id);
   idEl.getElementsByClassName('years')[0].innerHTML = String(years);
   idEl.getElementsByClassName('days')[0].innerHTML = String(days);
   idEl.getElementsByClassName('hours')[0].innerHTML = String(hours);
-  idEl.getElementsByClassName('minutes')[0].innerHTML = String(mins);
-  idEl.getElementsByClassName('seconds')[0].innerHTML = String(secs);
+  idEl.getElementsByClassName('minutes')[0].innerHTML = String(minutes);
+  idEl.getElementsByClassName('seconds')[0].innerHTML = String(seconds);
 
   clearTimeout(countUpFromTime.interval);
-  countUpFromTime.interval = setTimeout(function(){ countUpFromTime(countFrom, id); }, 1000);
+  countUpFromTime.interval = setTimeout(function(){ countUpFromTime(countFrom); }, 1000);
 }
+
+function countDownToTime(countTo) {
+  let now = new Date();
+  if (now > countTo){
+    next_anniversary.setFullYear(next_anniversary.getFullYear() + 1)
+    // countTo.setFullYear(countTo.getFullYear() + 1)
+  }
+  let { years, days, hours, minutes, seconds } = get_time(countTo - now);
+
+  let idEl = document.getElementById(count_down_id);
+  idEl.getElementsByClassName('days')[0].innerHTML = String(days);
+  idEl.getElementsByClassName('hours')[0].innerHTML = String(hours);
+  idEl.getElementsByClassName('minutes')[0].innerHTML = String(minutes);
+  idEl.getElementsByClassName('seconds')[0].innerHTML = String(seconds);
+
+  clearTimeout(countDownToTime.interval);
+  countDownToTime.interval = setTimeout(function(){ countDownToTime(countTo); },1000);
+}
+
+
+$("#fullview").fullView({
+  dots:  true,
+  dotsPosition:  'right',
+})
+

@@ -1,8 +1,7 @@
 {
-  "name": " ",
+  "name": "time_together",
   "version": "0.0.1",
   "description": "",
-  "keywords": "",
   "license": "",
   "author": "",
   "scripts": {
@@ -13,5 +12,9 @@
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "fullview": "^1.1.2",
+    "jquery": "^3.6.0"
   }
 }
