@@ -14,7 +14,6 @@
     "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
-    "fullview": "^1.1.2",
-    "jquery": "^3.6.0"
+    "fullview": "^1.1.2"
   }
 }
