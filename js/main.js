@@ -1,13 +1,8 @@
 'use strict'
 
-// require('dotenv').config()
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-// const client = require('twilio')(accountSid, authToken);
-
 const anniversary = new Date('Aug 17, 2017 15:00:00');
 let next_anniversary = new Date('Aug 17, 2021 15:00:00');
-let time_to_send_msg = new Date('Jul 25, 2021 14:26:05');
+let time_to_send_msg = new Date('Aug 16, 2021 20:16:30');
 const secondsInADay = 60 * 60 * 1000 * 24;
 const secondsInAHour = 60 * 60 * 1000;
 const secondsInAMins = 60 * 1000;
@@ -82,14 +77,7 @@ function countDownToTime(countTo) {
   idEl.getElementsByClassName('seconds')[0].innerHTML = String(seconds);
 
   if (check_date(now, time_to_send_msg)){
-    //send message
-    //increment date
-    console.log("AAA");
-    // client.messages.create({
-    //     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-    //     from: '+15017122661',
-    //     to: '+15558675310'
-    //   }).then(message => console.log(message.sid));
+
   }
 
   clearTimeout(countDownToTime.interval);
