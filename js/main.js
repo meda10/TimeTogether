@@ -2,6 +2,7 @@
 
 const anniversary = new Date('Aug 17, 2017 15:00:00');
 let next_anniversary = new Date('Aug 17, 2021 15:00:00');
+let time_to_send_msg = new Date('Jul 25, 2021 14:26:05');
 const secondsInADay = 60 * 60 * 1000 * 24;
 const secondsInAHour = 60 * 60 * 1000;
 const secondsInAMins = 60 * 1000;
@@ -10,9 +11,19 @@ const count_down_id = 'anniversary';
 const count_up_id_times = 'time_only';
 
 window.onload = function() {
+  // setTimeout(sendMessage, timeToSendMessage);
   countUpFromTime(anniversary);
   countDownToTime(next_anniversary);
 };
+
+function check_date(now, date){
+  return now.getFullYear() === date.getFullYear() &&
+    now.getMonth() === date.getMonth() &&
+    now.getDate() === date.getDate() &&
+    now.getHours() === date.getHours() &&
+    now.getMinutes() === date.getMinutes() &&
+    now.getSeconds() === date.getSeconds();
+}
 
 function get_time(timeDifference) {
   let days = Math.floor(timeDifference / (secondsInADay));
@@ -62,13 +73,21 @@ function countDownToTime(countTo) {
   idEl.getElementsByClassName('minutes')[0].innerHTML = String(minutes);
   idEl.getElementsByClassName('seconds')[0].innerHTML = String(seconds);
 
+  if (check_date(now, time_to_send_msg)){
+    //send message
+    //increment date
+  }
+
   clearTimeout(countDownToTime.interval);
   countDownToTime.interval = setTimeout(function(){ countDownToTime(countTo); },1000);
 }
 
+// function sendMessage() {
+//   alert("The time is 9:36 AM");
+//   console.log(timeToSendMessage);
+// }
 
 $("#fullview").fullView({
   dots:  true,
   dotsPosition:  'right',
 })
-

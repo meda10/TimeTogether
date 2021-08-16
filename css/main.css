@@ -315,6 +315,7 @@ body {
 }
 
 h1 {
+  text-align: center;
   font-weight: normal;
   letter-spacing: .125rem;
   text-transform: uppercase;
@@ -391,5 +392,14 @@ hr{
   .countup div {
     display: flex;
     flex-flow: column;
+  }
+
+  .time {
+    font-size: 1rem;
+    padding: .75rem;
+  }
+
+  .time span {
+    font-size: 2.5rem;
   }
 }

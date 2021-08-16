@@ -14,6 +14,7 @@
     "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
-    "fullview": "^1.1.2"
+    "fullview": "^1.1.2",
+    "twilio": "^3.66.0"
   }
 }
