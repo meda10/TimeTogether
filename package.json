@@ -8,12 +8,14 @@
     "build": "parcel build -d docs --public-url \"https://meda10.github.io/TimeTogether/\" index.html",
     "dev": "parcel index.html --open",
     "start": "npm run build && npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "browserify ./js/main.js -o ./js/bundle.js"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
+    "dotenv": "^5.0.1",
     "fullview": "^1.1.2",
     "twilio": "^3.66.0"
   }
