@@ -5,18 +5,20 @@
   "license": "",
   "author": "",
   "scripts": {
-    "build": "parcel build -d docs --public-url \"https://meda10.github.io/TimeTogether/\" index.html",
+    "build": "parcel build --public-url \"https://meda10.github.io/TimeTogether/\" index.html",
     "dev": "parcel index.html --open",
     "start": "npm run build && npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1",
     "bundle": "browserify ./js/main.js -o ./js/bundle.js"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "@parcel/packager-raw-url": "^2.16.4",
+    "@parcel/transformer-webmanifest": "^2.16.4",
+    "parcel": "^2.16.4"
   },
   "dependencies": {
+    "date-fns": "^4.4.0",
     "dotenv": "^5.0.1",
-    "fullview": "^1.1.2",
-    "twilio": "^3.66.0"
+    "fullview": "^1.1.2"
   }
 }

@@ -5,3 +5,4 @@ node_modules
 .cache
 twilio.env
 /js/test.js
+.parcel-cache

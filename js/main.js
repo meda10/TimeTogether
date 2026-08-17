@@ -1,100 +1,122 @@
-'use strict'
+import { 
+  intervalToDuration, 
+  differenceInDays, 
+  differenceInHours, 
+  differenceInMinutes, 
+  differenceInSeconds, 
+  differenceInYears,
+  addYears,
+  setYear
+} from 'date-fns';
 
-const anniversary = new Date('Aug 17, 2017 15:00:00');
-let next_anniversary = new Date('Aug 17, 2021 15:00:00');
-let time_to_send_msg = new Date('Aug 16, 2021 20:16:30');
-const secondsInADay = 60 * 60 * 1000 * 24;
-const secondsInAHour = 60 * 60 * 1000;
-const secondsInAMins = 60 * 1000;
-const count_up_id = 'countup1';
-const count_down_id = 'anniversary';
-const count_up_id_times = 'time_only';
-let leap_years = [2020, 2024, 2028, 2032, 2036, 2040, 2044, 2048, 2052, 2056, 2060, 2064, 2068, 2072, 2076, 2080, 2084, 2088, 2092, 2096, 2104, 2108];
+// Define multiple anniversaries, each mapped to its unique page/section selectors
+const anniversaries = [
+  {
+    id: 'anniv1',
+    baseDate: new Date('Aug 17, 2017 15:00:00'),
+    countUps: {
+      timeOnly: '#time_only_1',
+      breakdown: '#countup_1'
+    },
+    countdown: '#anniversary_1'
+  },
+  {
+    id: 'anniv2',
+    baseDate: new Date('May 10, 2025 14:00:00'),
+    countUps: {
+      timeOnly: '#time_only_2',
+      breakdown: '#countup_2'
+    },
+    countdown: '#anniversary_2'
+  }
+];
+
+// Helper function utilizing date-fns to handle Feb 29 gracefully (defaults to Feb 28 on non-leap years)
+function getNextAnniversary(baseDate, now = new Date()) {
+  let next = setYear(baseDate, now.getFullYear());
+  
+  // If this year's anniversary has already passed, target next year
+  if (now > next) {
+    next = addYears(next, 1);
+  }
+  return next;
+}
+
+function updateTimers() {
+  const now = new Date();
+
+  anniversaries.forEach(item => {
+    const anniversary = item.baseDate;
+
+    // ====================
+    // 1. COUNT UP TIMER
+    // ====================
+    
+    // TIME ONLY (Total Differences)
+    const timeOnlyEl = document.querySelector(item.countUps.timeOnly);
+    if (timeOnlyEl) {
+      timeOnlyEl.querySelector('.days_only').textContent = differenceInDays(now, anniversary);
+      timeOnlyEl.querySelector('.hours_only').textContent = differenceInHours(now, anniversary);
+      timeOnlyEl.querySelector('.minutes_only').textContent = differenceInMinutes(now, anniversary);
+      timeOnlyEl.querySelector('.seconds_only').textContent = differenceInSeconds(now, anniversary);
+    }
+
+    // BREAKDOWN (Years, Days, Hours, Mins, Secs)
+    const countupEl = document.querySelector(item.countUps.breakdown);
+    if (countupEl) {
+      // Calculate total years passed
+      const passedYears = differenceInYears(now, anniversary);
+      // Create a temporary date shifted by those exact years to find the remaining days
+      const dateAfterYears = addYears(anniversary, passedYears);
+      const passedDays = differenceInDays(now, dateAfterYears);
+      
+      // Calculate the remaining time units
+      const passedHours = differenceInHours(now, dateAfterYears) % 24;
+      const passedMinutes = differenceInMinutes(now, dateAfterYears) % 60;
+      const passedSeconds = differenceInSeconds(now, dateAfterYears) % 60;
+
+      countupEl.querySelector('.years').textContent = passedYears;
+      countupEl.querySelector('.days').textContent = passedDays;
+      countupEl.querySelector('.hours').textContent = passedHours;
+      countupEl.querySelector('.minutes').textContent = passedMinutes;
+      countupEl.querySelector('.seconds').textContent = passedSeconds;
+    }
+
+    // ====================
+    // 2. COUNT DOWN TIMER
+    // ====================
+    const nextAnniversary = getNextAnniversary(anniversary, now);
+
+    const countdownEl = document.querySelector(item.countdown);
+    if (countdownEl) {
+      const totalDays = differenceInDays(nextAnniversary, now);
+      const totalHours = differenceInHours(nextAnniversary, now) % 24;
+      const totalMinutes = differenceInMinutes(nextAnniversary, now) % 60;
+      const totalSeconds = differenceInSeconds(nextAnniversary, now) % 60;
+
+      const daysEl = countdownEl.querySelector('.days');
+      const hoursEl = countdownEl.querySelector('.hours');
+      const minutesEl = countdownEl.querySelector('.minutes');
+      const secondsEl = countdownEl.querySelector('.seconds');
+
+      if (daysEl) daysEl.textContent = totalDays;
+      if (hoursEl) hoursEl.textContent = totalHours;
+      if (minutesEl) minutesEl.textContent = totalMinutes;
+      if (secondsEl) secondsEl.textContent = totalSeconds;
+    }
+  });
+}
 
 window.onload = function() {
-  // setTimeout(sendMessage, timeToSendMessage);
-  countUpFromTime(anniversary);
-  countDownToTime(next_anniversary);
+  // Run once immediately, then every second
+  updateTimers();
+  setInterval(updateTimers, 1000);
+
+  // Initialize FullView plugin across multiple pages/sections
+  if (window.jQuery) {
+    window.jQuery("#fullview").fullView({
+      dots: true,
+      dotsPosition: 'right',
+    });
+  }
 };
-
-function check_date(now, date){
-  return now.getFullYear() === date.getFullYear() &&
-    now.getMonth() === date.getMonth() &&
-    now.getDate() === date.getDate() &&
-    now.getHours() === date.getHours() &&
-    now.getMinutes() === date.getMinutes() &&
-    now.getSeconds() === date.getSeconds();
-}
-
-function get_time(now, timeDifference) {
-  let days = Math.floor(timeDifference / (secondsInADay));
-  let years = Math.floor(days / 365);
-  let leep = 0;
-  if (years > 1){
-    for(const year of leap_years){
-      if(now.getFullYear() >= year){
-        leep += 1;
-      }
-    }
-    years = Math.floor(leep + (days - (leep * 366)) / 365);
-    days = Math.floor(days - (leep * 366 + ((years - leep) * 365)));
-  }
-  let hours = Math.floor((timeDifference % (secondsInADay)) / (secondsInAHour));
-  let minutes = Math.floor(((timeDifference % (secondsInADay)) % (secondsInAHour)) / secondsInAMins);
-  let seconds = Math.floor((((timeDifference % (secondsInADay)) % (secondsInAHour)) % secondsInAMins) / 1000);
-  return {years, days, hours, minutes, seconds};
-}
-
-function countUpFromTime(countFrom) {
-  let now = new Date();
-  let timeDifference = (now - countFrom);
-  let { years, days, hours, minutes, seconds } = get_time(now, timeDifference);
-
-  let id_times = document.getElementById(count_up_id_times);
-  id_times.getElementsByClassName('days_only')[0].innerHTML = String(Math.floor(timeDifference / secondsInADay));
-  id_times.getElementsByClassName('hours_only')[0].innerHTML = String(Math.floor(timeDifference / secondsInAHour));
-  id_times.getElementsByClassName('minutes_only')[0].innerHTML = String(Math.floor(timeDifference / secondsInAMins));
-  id_times.getElementsByClassName('seconds_only')[0].innerHTML = String(Math.floor(timeDifference / 1000));
-
-  let idEl = document.getElementById(count_up_id);
-  idEl.getElementsByClassName('years')[0].innerHTML = String(years);
-  idEl.getElementsByClassName('days')[0].innerHTML = String(days);
-  idEl.getElementsByClassName('hours')[0].innerHTML = String(hours);
-  idEl.getElementsByClassName('minutes')[0].innerHTML = String(minutes);
-  idEl.getElementsByClassName('seconds')[0].innerHTML = String(seconds);
-
-  clearTimeout(countUpFromTime.interval);
-  countUpFromTime.interval = setTimeout(function(){ countUpFromTime(countFrom); }, 1000);
-}
-
-function countDownToTime(countTo) {
-  let now = new Date();
-  if (now > countTo){
-    next_anniversary.setFullYear(next_anniversary.getFullYear() + 1)
-    // countTo.setFullYear(countTo.getFullYear() + 1)
-  }
-  let { years, days, hours, minutes, seconds } = get_time(now,countTo - now);
-
-  let idEl = document.getElementById(count_down_id);
-  idEl.getElementsByClassName('days')[0].innerHTML = String(days);
-  idEl.getElementsByClassName('hours')[0].innerHTML = String(hours);
-  idEl.getElementsByClassName('minutes')[0].innerHTML = String(minutes);
-  idEl.getElementsByClassName('seconds')[0].innerHTML = String(seconds);
-
-  if (check_date(now, time_to_send_msg)){
-
-  }
-
-  clearTimeout(countDownToTime.interval);
-  countDownToTime.interval = setTimeout(function(){ countDownToTime(countTo); },1000);
-}
-
-// function sendMessage() {
-//   alert("The time is 9:36 AM");
-//   console.log(timeToSendMessage);
-// }
-
-$("#fullview").fullView({
-  dots:  true,
-  dotsPosition:  'right',
-})

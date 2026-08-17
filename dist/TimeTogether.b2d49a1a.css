@@ -1,0 +1,125 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  font-size: 16px;
+  overflow: hidden;
+}
+
+*, :before, :after {
+  box-sizing: inherit;
+}
+
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#fullview > * {
+  backface-visibility: hidden;
+  perspective: 1000px;
+  display: block;
+  overflow: hidden;
+  height: 100vh !important;
+}
+
+#fv-dots {
+  position: fixed;
+  top: 50%;
+  left: 96%;
+  transform: translate(-50%, -50%);
+}
+
+#fv-dots ul {
+  list-style: none;
+  display: block;
+}
+
+#fv-dots ul li {
+  padding: 10px;
+}
+
+#fv-dots ul li a {
+  text-align: center;
+  width: 10px;
+  height: 10px;
+  margin: auto;
+  display: block;
+}
+
+#fv-dots ul li a span {
+  z-index: 1;
+  cursor: pointer;
+  background-color: #888;
+  border-radius: 50%;
+  width: 7px;
+  height: 7px;
+  margin: 0 auto;
+  text-decoration: none;
+  transition: all .1s;
+  display: block;
+}
+
+#fv-dots ul a.active span {
+  background-color: #bdbdbd;
+  width: 9px;
+  height: 9px;
+}
+
+#fv-dots ul a:hover span {
+  width: 9px;
+  height: 9px;
+}
+
+.fv-tooltip {
+  transition: all .65s cubic-bezier(.84, -.18, .31, 1.26);
+  position: relative;
+}
+
+.fv-tooltip .fv-tooltiptext {
+  visibility: hidden;
+  color: #edeff0;
+  text-align: center;
+  z-index: 1;
+  background: #3e474f;
+  border-radius: .25em;
+  width: 120px;
+  padding: 5px 0;
+  position: absolute;
+  top: -1px;
+  right: 105%;
+}
+
+.fv-tooltip:hover .fv-tooltiptext {
+  visibility: visible;
+}
+
+.fv-tooltip .fv-tooltiptext:after {
+  content: " ";
+  border: 5px solid #0000;
+  border-left-color: #3e474f;
+  margin-top: -5px;
+  position: absolute;
+  top: 50%;
+  left: 100%;
+}
+
+.fv-tooltip.fv-tooltip-left .fv-tooltiptext:after {
+  left: unset;
+  border-color: #0000 #3e474f #0000 #0000;
+  right: 100%;
+}
+/*# sourceMappingURL=TimeTogether.b2d49a1a.css.map */

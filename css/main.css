@@ -345,13 +345,13 @@ hr{
   font-size: 4.5rem;
 }
 
-#time_only span{
+.time_only span{
   display: inline-block;
   padding-right: 0.5em;
   justify-self: end;
 }
 
-#time_only{
+.time_only{
   display: grid;
   grid-template-columns: 1fr 1fr;
   /*grid-auto-rows: auto;*/
